@@ -1,11 +1,21 @@
 #!/usr/bin/env python
-import gtk, webkit
+import gtk, webkit, sys, getopt, argparse
+
+webpage = 'www.messenger.com'
+
+
 
 #INIT
 class Go():
-
     def __init__(self):
-        # Create window
+
+
+
+       # Create window
+        for arg in sys.argv:
+            webpage = str(sys.argv[1])
+
+
         self._window = gtk.Window()
         self._window.set_icon_from_file('icon.png')
         self._window.connect('destroy', lambda w: gtk.main_quit())
@@ -32,7 +42,9 @@ class Go():
         # Create view for webpage
         self._view = gtk.ScrolledWindow()
         self._webview = webkit.WebView()
-        self._webview.open('http://www.messenger.com')
+        self._webview.open('http://www.messenger.com/login')
+        #self._webview.open(str(webpage))
+        print 'requested site: ',webpage
         self._webview.connect('title-changed', self.change_title)
         self._webview.connect('load-committed', self.change_url)
         self._view.add(self._webview)
@@ -56,7 +68,7 @@ class Go():
             self._webview.open(_add)
 
     def change_title(self, widget, frame, title):
-        self._window.set_title(':: ' + title)
+        self._window.set_title(':: ' + webpage)
 
     def change_url(self, widget, frame):
         uri = frame.get_uri()
