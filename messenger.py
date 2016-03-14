@@ -1,7 +1,12 @@
 #!/usr/bin/env python
 import gtk, webkit, sys, getopt, argparse
+#
+### Thanks go to
+#
+# Eugene for the argparse hint, it helped me out.  (13/03/2016)
+#
+###
 
-webpage = 'www.messenger.com'
 
 
 
@@ -10,40 +15,86 @@ class Go():
     def __init__(self):
 
 
+    #Defaults for the app
+        webpage = 'www.messenger.com'
+
+    #Get metrics
+        width = gtk.gdk.screen_width() /4
+        height = gtk.gdk.screen_height()
+	print width, height
+
+	#Don't show the Browser UI
+	showBrowser = False
+
+	#Arguments, before window creation
+	#Eugene inspired this monstrosity...
+
+	parser = argparse.ArgumentParser(description='A SSB Python script.')
+	parser.add_argument('-s','--site', help='The website to load.',required=True)
+	parser.add_argument('-w','--width',help='The display width.', required=False)
+	parser.add_argument('-e','--height',help='The display height.', required=False)
+	parser.add_argument('-b','--browser',help='Show the Browser UI.', required=False)
+	
+	args = parser.parse_args()
+
+	## show values ##
+	if args.site is not None:
+            webpage = args.site
+            print webpage
+	if args.width is not None:
+            width = int(args.width)
+            print width
+	if args.height is not None:
+            height = int(args.height)
+            print height
+	if args.browser is not None:
+		showBrowser == True
 
        # Create window
-        for arg in sys.argv:
-            webpage = str(sys.argv[1])
-
-
         self._window = gtk.Window()
         self._window.set_icon_from_file('icon.png')
         self._window.connect('destroy', lambda w: gtk.main_quit())
-        self._window.set_default_size(560, 900)
+	self._window.set_default_size(width, height)
 
         # Create navigation bar
         self._navigation = gtk.HBox()
+	
+	#add in code for showing the Browser UI here .. from the command line.
+	#default = off
 
-        #self._back = gtk.ToolButton(gtk.STOCK_GO_BACK)
-        #self._forward = gtk.ToolButton(gtk.STOCK_GO_FORWARD)
-        #self._refresh = gtk.ToolButton(gtk.STOCK_REFRESH)
-        #self._address_bar = gtk.Entry()
 
-        #self._back.connect('clicked', self.go_back)
-        #self._forward.connect('clicked', self.go_forward)
-        #self._refresh.connect('clicked', self.refresh_page)
-        #self._address_bar.connect('activate', self.load_page)
+	#This is NOT the right way to do this... but i am tired.
+	#Will fix soon.
+	if args.browser is not None:
+        	self._back = gtk.ToolButton(gtk.STOCK_GO_BACK)
+        	self._forward = gtk.ToolButton(gtk.STOCK_GO_FORWARD)
+        	self._refresh = gtk.ToolButton(gtk.STOCK_REFRESH)
+        	self._address_bar = gtk.Entry()
 
-        #self._navigation.pack_start(self._back, False)
-        #self._navigation.pack_start(self._forward, False)
-        #self._navigation.pack_start(self._refresh, False)
-        #self._navigation.pack_start(self._address_bar)
+        	self._back.connect('clicked', self.go_back)
+        	self._forward.connect('clicked', self.go_forward)
+        	self._refresh.connect('clicked', self.refresh_page)
+        	self._address_bar.connect('activate', self.load_page)
+
+        	self._navigation.pack_start(self._back, False)
+	        self._navigation.pack_start(self._forward, False)
+	        self._navigation.pack_start(self._refresh, False)
+        	self._navigation.pack_start(self._address_bar)
 
         # Create view for webpage
         self._view = gtk.ScrolledWindow()
         self._webview = webkit.WebView()
-        self._webview.open('http://www.messenger.com/login')
-        #self._webview.open(str(webpage))
+
+	#I was not taking in the lack of 'http/s' hence the page would not load
+	#re-used code form below, need to make in to a normal sub and call it
+
+        if webpage.startswith('http://') or webpage.startswith('https://'):
+            self._webview.open(webpage)
+        else:
+            webpage = 'http://' + webpage
+            self._webview.open(webpage)
+
+        #self._webview.open('webpage')
         print 'requested site: ',webpage
         self._webview.connect('title-changed', self.change_title)
         self._webview.connect('load-committed', self.change_url)
@@ -53,7 +104,6 @@ class Go():
         self._container = gtk.VBox()
         self._container.pack_start(self._navigation, False)
         self._container.pack_start(self._view)
-
         self._window.add(self._container)
         self._window.show_all()
         gtk.main()
@@ -84,5 +134,3 @@ class Go():
         self._webview.reload()
 
 init = Go()
-#Need to get screen res and do /4 width and set screen as height at init
-#self.much_window.set_default_size((gtk.gdk.screen_width()/4,gtk.gdk.screen_height())
