@@ -16,7 +16,7 @@ class Go():
 
 
     #Defaults for the app
-        webpage = 'www.messenger.com'
+        webpage = 'www.messenger.com/login'
 
     #Get metrics
         width = gtk.gdk.screen_width() /4
