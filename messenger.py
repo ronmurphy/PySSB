@@ -7,9 +7,6 @@ import gtk, webkit, sys, getopt, argparse
 #
 ###
 
-
-
-
 #INIT
 class Go():
     def __init__(self):
@@ -19,7 +16,7 @@ class Go():
         webpage = 'www.messenger.com/login'
 
     #Get metrics
-        width = gtk.gdk.screen_width() /4
+        width = gtk.gdk.screen_width() /3
         height = gtk.gdk.screen_height()
 	print width, height
 
@@ -66,20 +63,17 @@ class Go():
 	#This is NOT the right way to do this... but i am tired.
 	#Will fix soon.
 	if args.browser is not None:
-        	self._back = gtk.ToolButton(gtk.STOCK_GO_BACK)
-        	self._forward = gtk.ToolButton(gtk.STOCK_GO_FORWARD)
-        	self._refresh = gtk.ToolButton(gtk.STOCK_REFRESH)
-        	self._address_bar = gtk.Entry()
-
-        	self._back.connect('clicked', self.go_back)
-        	self._forward.connect('clicked', self.go_forward)
-        	self._refresh.connect('clicked', self.refresh_page)
-        	self._address_bar.connect('activate', self.load_page)
-
-        	self._navigation.pack_start(self._back, False)
-	        self._navigation.pack_start(self._forward, False)
-	        self._navigation.pack_start(self._refresh, False)
-        	self._navigation.pack_start(self._address_bar)
+	    self._back = gtk.ToolButton(gtk.STOCK_GO_BACK)
+	    self._forward = gtk.ToolButton(gtk.STOCK_GO_FORWARD)
+	    self._refresh = gtk.ToolButton(gtk.STOCK_REFRESH)
+	    self._address_bar = gtk.Entry()
+	    self._back.connect('clicked', self.go_back)
+	    self._forward.connect('clicked', self.go_forward)
+	    self._refresh.connect('clicked', self.refresh_page)
+	    self._navigation.pack_start(self._back, False)
+	    self._navigation.pack_start(self._forward, False)
+	    self._navigation.pack_start(self._refresh, False)
+	    self._navigation.pack_start(self._address_bar)
 
         # Create view for webpage
         self._view = gtk.ScrolledWindow()
@@ -104,8 +98,10 @@ class Go():
         self._container = gtk.VBox()
         self._container.pack_start(self._navigation, False)
         self._container.pack_start(self._view)
+
         self._window.add(self._container)
         self._window.show_all()
+
         gtk.main()
 
     def load_page(self, widget):
