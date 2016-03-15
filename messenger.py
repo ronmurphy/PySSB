@@ -13,7 +13,7 @@ class Go():
 
 
     #Defaults for the app
-        webpage = 'www.messenger.com/login'
+        webpage = 'http://www.messenger.com/login'
 
     #Get metrics
         width = gtk.gdk.screen_width() /3
@@ -27,7 +27,7 @@ class Go():
 	#Eugene inspired this monstrosity...
 
 	parser = argparse.ArgumentParser(description='A SSB Python script.')
-	parser.add_argument('-s','--site', help='The website to load.',required=True)
+	parser.add_argument('-s','--site', help='The website to load.',required=False)
 	parser.add_argument('-w','--width',help='The display width.', required=False)
 	parser.add_argument('-e','--height',help='The display height.', required=False)
 	parser.add_argument('-b','--browser',help='Show the Browser UI.', required=False)
@@ -36,14 +36,24 @@ class Go():
 
 	## show values ##
 	if args.site is not None:
-            webpage = args.site
-            print webpage
+	#check for http/s, if not found, add.
+	#moved this to the args, less work down the line.
+		webpage = args.site
+		if webpage.startswith('http://') or webpage.startswith('https://'):
+			self._webview.open(webpage)
+        	else:
+            		webpage = 'http://' + webpage
+		print webpage
+
+	#check for a special width
 	if args.width is not None:
             width = int(args.width)
             print width
+	#check for a special height
 	if args.height is not None:
             height = int(args.height)
             print height
+	#check to show BrowserUI
 	if args.browser is not None:
 		showBrowser == True
 
@@ -82,11 +92,8 @@ class Go():
 	#I was not taking in the lack of 'http/s' hence the page would not load
 	#re-used code form below, need to make in to a normal sub and call it
 
-        if webpage.startswith('http://') or webpage.startswith('https://'):
-            self._webview.open(webpage)
-        else:
-            webpage = 'http://' + webpage
-            self._webview.open(webpage)
+       
+	self._webview.open(webpage)
 
         #self._webview.open('webpage')
         print 'requested site: ',webpage
