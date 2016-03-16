@@ -1,0 +1,2 @@
+While not implemented just yet, this will store the icons for the individual websites in this folder.
+It will eventually load the correct icon per the website and set it... eventually.
