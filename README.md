@@ -10,3 +10,5 @@ have fun :D
 changelog:
 14/3/2016 - Argument parsing, can choose website to load, change width and height by argument also.
             Thanks to Eugene for the argparse help.
+
+16/03/2013 - Added icon improvemtnes for the future, renamed messenger.py to PySSB.py
