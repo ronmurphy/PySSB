@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 import gtk, webkit, sys, getopt, argparse
+import os.path
+###
 #
 ### Thanks go to
 #
@@ -15,6 +17,7 @@ class Go():
 
     #Defaults for the app
         webpage = 'http://www.messenger.com/login'
+	siteicon = 'messenger'
 
     #Get metrics
         width = gtk.gdk.screen_width() /3
@@ -44,8 +47,22 @@ class Go():
 			self._webview.open(webpage)
         	else:
             		webpage = 'http://' + webpage
-		print webpage
+		
+	#extract the general website name
+	#used for the useicon ad the window title
+	siteicon = webpage.split('//', 1)
+	print 'website: '+siteicon[1]
 
+	print siteicon[1].split('.',1)
+	print siteicon[1].split('.',2)
+
+	siteicon=siteicon[1].split('.',1)
+	siteicon=siteicon[1].split('.',2)
+
+	#get check for site name as an icon.png file
+	useicon=siteicon[0]+'.png'
+	print 'using icon: '+useicon
+	
 	#check for a special width
 	if args.width is not None:
             width = int(args.width)
@@ -60,8 +77,12 @@ class Go():
 
        # Create window
         self._window = gtk.Window()
-        self._window.set_icon_from_file('icons/icon.png')
-        self._window.connect('destroy', lambda w: gtk.main_quit())
+	if os.path.exists('icons/'+useicon):
+		self._window.set_icon_from_file('icons/'+useicon)
+	else:
+        	self._window.set_icon_from_file('icons/icon.png')
+        
+	self._window.connect('destroy', lambda w: gtk.main_quit())
 	self._window.set_default_size(width, height)
 
         # Create navigation bar
@@ -90,13 +111,7 @@ class Go():
         self._view = gtk.ScrolledWindow()
         self._webview = webkit.WebView()
 
-	#I was not taking in the lack of 'http/s' hence the page would not load
-	#re-used code form below, need to make in to a normal sub and call it
-
-       
 	self._webview.open(webpage)
-
-        #self._webview.open('webpage')
         print 'requested site: ',webpage
         self._webview.connect('title-changed', self.change_title)
         self._webview.connect('load-committed', self.change_url)
@@ -109,7 +124,7 @@ class Go():
 
         self._window.add(self._container)
         self._window.show_all()
-
+	self._window.set_title(siteicon[0].capitalize())
         gtk.main()
 
     def load_page(self, widget):
