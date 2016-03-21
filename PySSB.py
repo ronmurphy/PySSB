@@ -7,6 +7,8 @@ import os.path
 #
 # Eugene for the argparse hint, it helped me out.  (13/03/2016)
 # Namechange from messenger.py to PySSB.py (16/03/2016)
+# Added simple support for custom app icon png files ->
+#	Window name now reflects the website visited. (19/03/2016)
 #
 ###
 
@@ -102,6 +104,7 @@ class Go():
 	    self._back.connect('clicked', self.go_back)
 	    self._forward.connect('clicked', self.go_forward)
 	    self._refresh.connect('clicked', self.refresh_page)
+	    self._address_bar.connect('activate', self.load_page)
 	    self._navigation.pack_start(self._back, False)
 	    self._navigation.pack_start(self._forward, False)
 	    self._navigation.pack_start(self._refresh, False)
@@ -137,7 +140,7 @@ class Go():
             self._webview.open(_add)
 
     def change_title(self, widget, frame, title):
-        self._window.set_title(':: ' + webpage)
+        self._window.set_title(title)
 
     def change_url(self, widget, frame):
         uri = frame.get_uri()

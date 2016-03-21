@@ -13,3 +13,4 @@ changelog:
 
 16/03/2013 - Added icon improvemtnes for the future, renamed messenger.py to PySSB.py
 19/03/2016 - Added in splice() arguments to check if a custom website icon exists, if so, use the icon.  Also, use the website's title as the window title.
+21/03/2016 - Fixed -b --browser keypress-enter for the url/uri navigation 
